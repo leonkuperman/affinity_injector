@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mutate-affinity
+  namespace: castai-agent
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: mutate-affinity
+  template:
+    metadata:
+      labels:
+        app: mutate-affinity
+    spec:
+      containers:
+      - name: mutate-affinity-container
+        image: lkup77/mutate_affinity:v4
+        ports:
+        - containerPort: 5050
+#        env:
+#        - name: MUTATING_WEBHOOK_LABEL_KEY
+#          value: "app"
+      affinity:
+        nodeAffinity: 
+          requiredDuringSchedulingIgnoredDuringExecution: 
+            nodeSelectorTerms: 
+              - matchExpressions: 
+                - key: kubernetes.io/arch
+                  operator: In
+                  values: 
+                    - arm64
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+          - weight: 100
+            podAffinityTerm:
+              labelSelector:
+                matchExpressions:
+                - key: "app"
+                  operator: In
+                  values:
+                  - mutate-affinity
+              topologyKey: "kubernetes.io/hostname"
