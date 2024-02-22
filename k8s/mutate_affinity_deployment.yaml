@@ -4,7 +4,7 @@ metadata:
   name: mutate-affinity
   namespace: castai-agent
 spec:
-  replicas: 2
+  replicas: 1
   selector:
     matchLabels:
       app: mutate-affinity
@@ -13,23 +13,17 @@ spec:
       labels:
         app: mutate-affinity
     spec:
+      serviceAccountName: mutate-affinity-service-account
       containers:
       - name: mutate-affinity-container
-        image: lkup77/mutate_affinity:v4
+        image: lkup77/mutate_affinity:v14
+        imagePullPolicy: Always
         ports:
         - containerPort: 5050
 #        env:
 #        - name: MUTATING_WEBHOOK_LABEL_KEY
 #          value: "app"
       affinity:
-        nodeAffinity: 
-          requiredDuringSchedulingIgnoredDuringExecution: 
-            nodeSelectorTerms: 
-              - matchExpressions: 
-                - key: kubernetes.io/arch
-                  operator: In
-                  values: 
-                    - arm64
         podAntiAffinity:
           preferredDuringSchedulingIgnoredDuringExecution:
           - weight: 100

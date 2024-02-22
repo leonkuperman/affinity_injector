@@ -3,18 +3,23 @@ kind: MutatingWebhookConfiguration
 metadata:
   name: mutate-affinity-webhook
 webhooks:
-  - name: mutate-affinity.cast.ai
+  - name: mutate-affinity-service.castai-agent.svc.cluster.local
     clientConfig:
       service:
         name: mutate-affinity-service
         namespace: castai-agent
         path: "/mutate-pods"
         port: 5050
-      caBundle: "LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSURtekNDQW9PZ0F3SUJBZ0lVR0V5STNDait1bVQwNG1RWFljVWk2UlB3QmZNd0RRWUpLb1pJaHZjTkFRRUwKQlFBd2RqRUxNQWtHQTFVRUJoTUNRMEV4RURBT0JnTlZCQWdNQjA5dWRHRnlhVzh4RURBT0JnTlZCQWNNQjFSdgpjbTl1ZEc4eEVEQU9CZ05WQkFvTUIwTkJVMVFnUVVreE1UQXZCZ05WQkFNTUtHMTFkR0YwWlMxaFptWnBibWwwCmVTMXpaWEoyYVdObExtTmhjM1JoYVMxaFoyVnVkQzV6ZG1Nd0hoY05NalF3TWpJeU1EQXlOekF6V2hjTk1qVXcKTWpJeE1EQXlOekF6V2pCMk1Rc3dDUVlEVlFRR0V3SkRRVEVRTUE0R0ExVUVDQXdIVDI1MFlYSnBiekVRTUE0RwpBMVVFQnd3SFZHOXliMjUwYnpFUU1BNEdBMVVFQ2d3SFEwRlRWQ0JCU1RFeE1DOEdBMVVFQXd3b2JYVjBZWFJsCkxXRm1abWx1YVhSNUxYTmxjblpwWTJVdVkyRnpkR0ZwTFdGblpXNTBMbk4yWXpDQ0FTSXdEUVlKS29aSWh2Y04KQVFFQkJRQURnZ0VQQURDQ0FRb0NnZ0VCQU9nbHAySUhJSXhaZnFtWFFQOUU2bzBjRUxyTzlLckhnYnlpZ2E3egpuV0VyQmNCZ05HTG40RTFZclJ6djl3UCs2c1hKL2Z0bSs4NUVuZGNPUUttblFWWlJ3TzZscW9JY1Y3YTRwUk1sCkhPcHNVREZNaGNtK1dQUzN2Tkh3NTcwQktlYlNSVm1INDIxdkVuamRHNDBjUS9JZlBZVTVvUkRTdGVoTkl1NGUKRHdGUUZGMmtObFVJM2ZUT1R6eTJNRjMvYnh1UDlkSlBGK3ZvU2h5UGdNUXVDUUNqbnJIQjQwa1ZybkZIQlpRMQo3YXRSODl3US8vK2RVSFhMV2xTQ0xBWk1sNEN6RlpkLzdTMVUzVWkwR2JYTS95dk9vVlRNTlJ4SUFoN3YySUFhCm04c3M4ZWIxOUhZUHVUdEFUVXA3RzFrb2Z3S3l6cUdrZzcwbXJac0JRWHBxSHQwQ0F3RUFBYU1oTUI4d0hRWUQKVlIwT0JCWUVGTkNDMDFwOU5WMWZydHJkaFFveCs0eVpZMkhXTUEwR0NTcUdTSWIzRFFFQkN3VUFBNElCQVFBYgpEYUJoSDF0Z01NSG5uSGJVSUM4SUU3dXpJUUJ2M3orS0R5bzVxQlpOR0d1bFR1NzBOS2hiZUVLWnZxWEhrd2tGCjNvSHlmRnR5NEtsanFjVk1wVVVSWlFrdEk1Nm1HNmtyQjNJVUNUa3ZnWmdXdWh6TWxFMGYwZzdFUnpFaExEWFYKNklUK0lzNlpHRUxkajNmeTR0dE44Ny9nOGx1d2VNcDF4bjc3cmpMVXNjQ2tjOEIwTzM0Q0JMQlkvd2JTMFhqVQpSeDlIclFnVFRzb0MvYWtybDR1YmZWYmw0bXEwSDJJSThocXBKdlc3SnlIQWEwYnk0OGYvY2VoMUJndmJoVG1WCmRsajBrcHEwWGxFSXNWcTY3Vm1qM0pFd3N5K3phTUtyemkyc0N5M0tHcDJZUEY4aFkxeWN5bzMxbzlOc3ozck0KVEZuenVBb25qanY4NHVRWE50bmQKLS0tLS1FTkQgQ0VSVElGSUNBVEUtLS0tLQo="
+      caBundle: "None"
     rules:
       - operations: ["CREATE"]
         apiGroups: [""]
         apiVersions: ["v1"]
         resources: ["pods"]
+    namespaceSelector:
+      matchExpressions:
+      - key: webhook-enabled
+        operator: NotIn
+        values: ["false"]
     admissionReviewVersions: ["v1"]
     sideEffects: None
